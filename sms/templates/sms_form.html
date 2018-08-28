@@ -5,7 +5,7 @@
 {% block body %}
 <div class="page-title">
     <div class="title_left">
-        <h3>Clients</h3>
+        <h3>Send SMS</h3>
     </div>
     <div class="clearfix"></div>
     <div class="row">
@@ -28,99 +28,23 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-                              <form id="client-form" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data" method="post" action="{% url 'add_client' %}">
+                              <form id="client-form" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data" method="post" action="{% url 'sms' %}">
                                   {% csrf_token %}
                               <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_first_name">First Name <span class="required" style='color:red;'>*</span></label>
+                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_mobile">Send To <span class="required" style='color:red;'>*</span></label>
                                   <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="text" name="first_name" maxlength="128" required id="id_first_name" class="form-control col-md-7 col-xs-12"/></p>
+                                  <input type="text" name="mobile" maxlength="16" required id="id_mobile" class="form-control col-md-7 col-xs-12"/></p>
                                 </div>
                               </div>
                               <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_last_name">Last Name <span class="required" style='color:red;'>*</span></label>
+                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_message">Message <span class="required" style='color:red;'>*</span></label>
                                   <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="text" name="last_name" maxlength="128" required id="id_last_name" class="form-control col-md-7 col-xs-12"/></p>
+                                       <textarea name="message" maxlength="128" required id="id_message" class="form-control col-md-7 col-xs-12"></textarea></p>
                                 </div>
                               </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_gender">Gender <span class="required" style='color:red;'>*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select name="gender" required id="id_gender" class="form-control">
-                                      <option value="" selected>---------</option>
-                                      <option value="M">Male</option>
-                                      <option value="F">Female</option>
-                                    </select>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label for="id_addr_line1" class="control-label col-md-3 col-sm-3 col-xs-12">Address</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input id="id_addr_line1" class="form-control col-md-7 col-xs-12" type="text" name="line1" placeholder="Line 1">
-                                </div>
-                              </div>
-                                  <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input id="id_addr_line2" class="form-control col-md-7 col-xs-12" type="text" name="line2" placeholder="Line 2">
-                                </div>
-                              </div>
-                                  <div class="form-group">
-                                <label for="id_location" class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input id="id_location" class="form-control col-md-7 col-xs-12" type="text" name="location" placeholder="City or Village">
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                               <div class="col-md-2 col-sm-4 col-xs-12">
-                                  <input id="id_state" class="form-control col-md-7 col-xs-12" placeholder="State" type="text" name="state">
-                                </div>
-                                 <div class="col-md-2 col-sm-4 col-xs-12">
-                                  <input id="id_country" class="form-control col-md-7 col-xs-12" placeholder="Country" type="text" name="country">
-                                </div>
-                                <div class="col-md-2 col-sm-4 col-xs-12">
-                                  <input id="id_zip" class="form-control col-md-7 col-xs-12" placeholder="ZipCode" type="text"  name="zip">
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label for="id_mobile" class="control-label col-md-3 col-sm-3 col-xs-12">Mobile <span class="required" style='color:red;'>*</span></label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="text" class="form-control col-md-7 col-xs-12" name="mobile" maxlength="15" required id="id_mobile" />
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_email">Email <span class="required" style='color:red;'>*</span></label>
-                               <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="email" name="email" maxlength="254" required id="id_email" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_skype_id">Skype Id</label>
-                               <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="text" name="skype_id" maxlength="128" id="id_skype_id" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_document">Document</label>
-                                  <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="file" name="document" id="id_document"/></p>
-                                  </div>
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_status">Status <span class="required" style='color:red;'>*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select name="status" required id="id_status" class="form-control">
-                                        <option value="Active" selected>Active</option>
-                                        <option value="Inactive">Inactive</option>
-                                    </select>
-                                </div></div>
-                                  <!--{{ form.as_p }}-->
                               <div class="ln_solid"></div>
                               <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                  <a href="{% url 'list_clients' %}" class='btn btn-primary' >Cancel</a>
                                   <button class="btn btn-primary" type="reset">Reset</button>
                                   <input type="submit" class="btn btn-success"/>
                                 </div>

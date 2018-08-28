@@ -5,5 +5,5 @@ from sms.views import *
 
 
 urlpatterns = [
-
+             path('', SMSView.as_view(), name='sms'),
 ]

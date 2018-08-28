@@ -135,7 +135,7 @@ MEDIA_URL = '/media/'
 # Plivo Configuration
 PLIVO_AUTH_ID = ''
 PLIVO_AUTH_TOKEN = ''
-SENDER_NUMBER = ''
+SENDER_NUMBER = '11111111111'
 
 
 REST_FRAMEWORK = {
@@ -153,3 +153,11 @@ REST_FRAMEWORK = {
 }
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+#Email Server
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'firoz.nalband@triveniconsulting.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True
+

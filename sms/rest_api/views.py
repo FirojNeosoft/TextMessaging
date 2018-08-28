@@ -1,13 +1,25 @@
 import plivo
 
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics
+from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAdminUser
 
 from sms.rest_api.serializers import *
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    Work on user entity
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('username', 'email')
+    ordering_fields = ('username', 'email')
+    filter_fields = ('username', 'email', 'is_staff')
 
 
 class SendMessage(generics.CreateAPIView):
