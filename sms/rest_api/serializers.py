@@ -7,7 +7,7 @@ from sms.models import *
 
 
 class MobileMessageSerializer(serializers.Serializer):
-    app_id = serializers.IntegerField(required=False, min_value=1)
+    app_id = serializers.IntegerField(min_value=1)
     send_to = serializers.CharField(max_length=15)
     message = serializers.CharField(max_length=2048)
 
