@@ -30,18 +30,19 @@
                             <div class="box-body">
                               <form id="client-form" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data" method="post" action="{% url 'sms' %}">
                                   {% csrf_token %}
-                              <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_mobile">Send To <span class="required" style='color:red;'>*</span></label>
-                                  <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <input type="text" name="mobile" maxlength="16" required id="id_mobile" class="form-control col-md-7 col-xs-12"/></p>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_message">Message <span class="required" style='color:red;'>*</span></label>
-                                  <div class="col-md-6 col-sm-6 col-xs-12">
-                                       <textarea name="message" maxlength="128" required id="id_message" class="form-control col-md-7 col-xs-12"></textarea></p>
-                                </div>
-                              </div>
+                              <!--<div class="form-group">-->
+                                  <!--<label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_mobile">Send To <span class="required" style='color:red;'>*</span></label>-->
+                                  <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
+                                  <!--<input type="text" name="mobile" maxlength="16" required id="id_mobile" class="form-control col-md-7 col-xs-12"/></p>-->
+                                <!--</div>-->
+                              <!--</div>-->
+                              <!--<div class="form-group">-->
+                                  <!--<label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_message">Message <span class="required" style='color:red;'>*</span></label>-->
+                                  <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
+                                       <!--<textarea name="message" maxlength="128" required id="id_message" class="form-control col-md-7 col-xs-12"></textarea></p>-->
+                                <!--</div>-->
+                              <!--</div>-->
+                                  {{ form.as_p }}
                               <div class="ln_solid"></div>
                               <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -64,4 +65,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block static %}
+<script>
+  $(document).ready(function(){
+   $("#id_application").addClass( "form-control" );
+   $("#id_send_to").addClass( "form-control" );
+   $("#id_text_message").addClass( "form-control" );
+    });
+</script>
 {% endblock %}

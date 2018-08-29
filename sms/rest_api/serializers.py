@@ -1,7 +1,9 @@
-from django.contrib.auth.models import User
 from django.db import transaction
+from django.contrib.auth.models import User
 
 from rest_framework import serializers
+
+from sms.models import *
 
 
 class MobileMessageSerializer(serializers.Serializer):
@@ -33,3 +35,14 @@ class UserSerializer(serializers.ModelSerializer):
         instance.set_password(validated_data.get('password', instance.password))
         instance.save()
         return instance
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    """
+    Application Serializer
+    """
+
+    class Meta:
+        model = Application
+        fields = ('id', 'name', 'max_limit', 'status', 'created_at')
+        read_only_fields = ('id', 'created_at',)

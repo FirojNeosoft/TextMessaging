@@ -161,3 +161,6 @@ EMAIL_HOST_USER = 'firoz.nalband@triveniconsulting.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
+# Required choices variables
+STATUS_CHOICES = (('Active', 'Active'), ('Inactive', 'Inactive'), ('Delete', 'Delete'))
+
