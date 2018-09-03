@@ -72,16 +72,20 @@ class SMSView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         """
 
         try:
-            if is_application_expire(request.POST['application']):
-                form = self.get_form()
-                if form.is_valid():
-                    client = plivo.RestClient(settings.PLIVO_AUTH_ID, settings.PLIVO_AUTH_TOKEN)
-                    client.messages.create(src=settings.SENDER_NUMBER, dst=request.POST['send_to'],\
-                                       text=request.POST['text_message'], )
-                    form.save()
-                    messages.success(request, "Successfully SMS sent.")
-            else:
-                messages.error(request, "Selected application is expired.")
+            if request.POST['application']:
+                if is_application_expire(request.POST['application']):
+                    messages.error(request, "Selected application is expired.")
+                    return redirect('sms')
+
+            form = self.get_form()
+            if form.is_valid():
+                # client = plivo.RestClient(settings.PLIVO_AUTH_ID, settings.PLIVO_AUTH_TOKEN)
+                # client.messages.create(src=settings.SENDER_NUMBER, dst=request.POST['send_to'],\
+                #                    text=request.POST['text_message'], )
+                form.save()
+                messages.success(request, "Successfully SMS sent.")
+
+
         except Exception as e:
             messages.error(request, "Error occured while sending sms.")
         return redirect('sms')

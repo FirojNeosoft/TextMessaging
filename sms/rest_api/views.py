@@ -1,6 +1,3 @@
-import plivo
-
-from django.conf import settings
 from django.contrib.auth.models import User
 
 from rest_framework.response import Response
@@ -43,17 +40,20 @@ class SendMessage(generics.CreateAPIView):
     permission_classes = (IsAdminUser,)
 
     def post(self, request, format=None):
-        if is_application_expire(request.POST['app_id']):
+        try:
             serializer = MobileMessageSerializer(data=request.data)
             if serializer.is_valid():
-                client = plivo.RestClient(settings.PLIVO_AUTH_ID, settings.PLIVO_AUTH_TOKEN)
-                client.messages.create(src=settings.SENDER_NUMBER, dst=serializer.data['send_to'],\
-                                       text=serializer.data['message'], )
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({
-                'success': False,
-                'message': 'Selected application is expired.',
-                'data':{}
-            })
+                if 'app_id' in serializer.data:
+                    app = Application.objects.get(id=int(serializer.data['app_id']))
+                    if is_application_expire(app.id):
+                        return Response({'status':400, 'message':'Selected application is expired'},\
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    message_log = send_sms(serializer.data['send_to'], serializer.data['message'])
+                    message_log.application = app
+                    message_log.save()
+                else:
+                    send_sms(serializer.data['send_to'], serializer.data['message'])
+                return Response({'status':201, 'message':'SMS sent successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'status':400, 'message':'Fail to send SMS'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'status':400, 'message':str(e)}, status=status.HTTP_400_BAD_REQUEST)

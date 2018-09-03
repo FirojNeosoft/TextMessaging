@@ -41,7 +41,7 @@ class TextMessageHistory(models.Model):
     """
     TextMessageHistory model
     """
-    application = models.ForeignKey('Application', related_name='text_message_history', blank=False, null=True,\
+    application = models.ForeignKey('Application', related_name='text_message_history', blank=True, null=True,\
                                     on_delete=models.SET_NULL)
     send_to = models.CharField('Send To', max_length=20, blank=False, null=False)
     text_message = models.TextField(null=False, blank=False)
