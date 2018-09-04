@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+     <form data-parsley-validate class="form-horizontal form-label-left" method="post">
+         {% csrf_token %}
+          <div class="form-group">
+              <h4>Are you sure want to delete "{{ object.username }}" user? </h4>
+          </div>
+         <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+              <input type="submit" value="Submit" class="btn btn-primary" />
+              <a href="{% url 'list_users' %}" class="btn btn-info">Cancel</a>
+            </div>
+          </div>
+     </form>
+{% endblock %}
+

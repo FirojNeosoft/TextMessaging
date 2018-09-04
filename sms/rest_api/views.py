@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 
 from rest_framework.response import Response
@@ -6,6 +8,9 @@ from rest_framework.permissions import IsAdminUser
 
 from sms.rest_api.serializers import *
 from sms.utils import *
+
+
+logger = logging.getLogger('message_log')
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -54,6 +59,8 @@ class SendMessage(generics.CreateAPIView):
                 else:
                     send_sms(serializer.data['send_to'], serializer.data['message'])
                 return Response({'status':201, 'message':'SMS sent successfully'}, status=status.HTTP_201_CREATED)
+            logger.error("Fail to send sms")
             return Response({'status':400, 'message':'Fail to send SMS'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            logger.error("Error occured while sending sms "+str(e))
             return Response({'status':400, 'message':str(e)}, status=status.HTTP_400_BAD_REQUEST)

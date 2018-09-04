@@ -5,7 +5,7 @@
 {% block body %}
        <div class="page-title">
             <div class="title_left">
-                <h3>Applications</h3>
+                <h3>Users</h3>
             </div>
             <div class="clearfix"></div>
             <div class="row">
@@ -14,11 +14,10 @@
                         <div class="">
                             <ul class="list-inline pull-right clearfix controls">
                                 <li>
-                                    <a class="btn btn-primary download-excel" href="{% url 'add_application' %}"> <i class="fa fa-plus"></i> Create New Application</a>
+                                    <a class="btn btn-primary download-excel" href="{% url 'add_user' %}"> <i class="fa fa-plus"></i> Create New User</a>
                                 </li>
                             </ul>
-                            <div class="clearfix">
-                            </div>
+                            <div class="clearfix"></div>
                         </div>
                         <div class="box-header" >
                           {% if messages %}
@@ -35,28 +34,24 @@
                         <div class="x_content">
                             <br />
                             <div class="table-responsive">
-                                <table id="application_table" class="cell-border">
+                               <table id="users_table" class="cell-border">
                                     <thead>
                                     <tr>
-                                      <th>Application Id</th>
-                                      <th>Name</th>
-                                      <th>Max Limit</th>
-                                      <th>Status</th>
-                                      <th>Created At</th>
+                                      <th>User Name</th>
+                                      <th>Email</th>
+                                      <th>Access Key</th>
                                       <th class="no-sort">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for application in application_list %}
+                                    {% for user in user_list %}
                                       <tr>
-                                        <td>{{ application.id }}</td>
-                                        <td>{{ application.name }}</td>
-                                        <td>{{ application.max_limit }}</td>
-                                        <td>{{ application.status }}</td>
-                                        <td>{{ application.created_at }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.auth_token.key }}</td>
                                         <td>
-                                          <a class="fa fa-pencil-square-o" href="{% url 'update_application' application.id %}"></a>
-                                          <a class="fa fa-times client_delete_icon" href="{% url 'delete_application' application.id %}" obj_name='' style="padding-left:50px;"></a>
+                                          <a class="fa fa-pencil-square-o" href="{% url 'update_user' user.id %}"></a>
+                                          <a class="fa fa-times client_delete_icon" href="{% url 'delete_user' user.id %}" obj_name='' style="padding-left:50px;"></a>
                                         </td>
                                       </tr>
                                     {% endfor %}
@@ -73,7 +68,7 @@
 {% block static %}
 <script>
   $(document).ready(function(){
-  $('#application_table').DataTable();
+  $('#users_table').DataTable();
   });
 </script>
 {% endblock %}

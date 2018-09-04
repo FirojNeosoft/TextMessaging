@@ -166,3 +166,55 @@ EMAIL_USE_TLS = True
 # Required choices variables
 STATUS_CHOICES = (('Active', 'Active'), ('Inactive', 'Inactive'), ('Delete', 'Delete'))
 
+# Logs configuration
+LOG_ROOT = os.path.join(BASE_DIR, 'docs/logs/')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+        'message_log_file': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'formatter': 'verbose',
+            'class': 'logging.FileHandler',
+            'filename': LOG_ROOT+'messages_logs.log',
+        },
+    },
+    'loggers': {
+        'message_log': {
+            'handlers': ['message_log_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'py.warnings': {
+            'handlers': ['console'],
+        },
+    },
+}
+
+
