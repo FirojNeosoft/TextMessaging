@@ -73,6 +73,9 @@
    {
    $("#id_password").prop('readonly', 'readonly');
    }
+   {% if not request.user.is_staff %}
+   $("#id_is_staff").attr('disabled',true);
+   {% endif %}
    $("label[for='id_email']").html("Email Address");
    $("label[for='id_is_staff']").html("Staff Status");
     });

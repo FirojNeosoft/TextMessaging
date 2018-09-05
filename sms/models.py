@@ -18,6 +18,8 @@ class Application(models.Model):
     Application model
     """
     name = models.CharField('Name', max_length=128, blank=False, null=False)
+    app_admin = models.ForeignKey(settings.AUTH_USER_MODEL,  verbose_name = 'Owner Of Application', related_name='application',\
+                                  on_delete=models.CASCADE)
     max_limit = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=10, choices=settings.STATUS_CHOICES, default='Active')
     created_at = models.DateTimeField(default=timezone.now)

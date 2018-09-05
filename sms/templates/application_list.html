@@ -12,11 +12,13 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="">
+                            {% if request.user.is_staff %}
                             <ul class="list-inline pull-right clearfix controls">
                                 <li>
                                     <a class="btn btn-primary download-excel" href="{% url 'add_application' %}"> <i class="fa fa-plus"></i> Create New Application</a>
                                 </li>
                             </ul>
+                            {% endif %}
                             <div class="clearfix">
                             </div>
                         </div>
@@ -43,7 +45,9 @@
                                       <th>Max Limit</th>
                                       <th>Status</th>
                                       <th>Created At</th>
+                                     {% if request.user.is_staff %}
                                       <th class="no-sort">Action</th>
+                                     {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -54,10 +58,12 @@
                                         <td>{{ application.max_limit }}</td>
                                         <td>{{ application.status }}</td>
                                         <td>{{ application.created_at }}</td>
+                                        {% if request.user.is_staff %}
                                         <td>
                                           <a class="fa fa-pencil-square-o" href="{% url 'update_application' application.id %}"></a>
                                           <a class="fa fa-times client_delete_icon" href="{% url 'delete_application' application.id %}" obj_name='' style="padding-left:50px;"></a>
                                         </td>
+                                        {% endif %}
                                       </tr>
                                     {% endfor %}
                                     </tbody>

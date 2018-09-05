@@ -5,6 +5,14 @@ from django.conf import settings
 from sms.models import *
 
 
+def is_application_or_system_admin(request, app_id):
+    app = Application.objects.get(pk=int(app_id), status='Active')
+    if app.app_admin == request.user or request.user.is_staff:
+        return True
+    else:
+        return False
+
+
 def is_application_expire(app_id):
     app = Application.objects.get(pk=int(app_id), status='Active')
     sms_count = TextMessageHistory.objects.filter(application=app).count()

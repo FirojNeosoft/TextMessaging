@@ -28,6 +28,15 @@ class ListUsersView(LoginRequiredMixin, ListView):
     queryset = User.objects.all()
     template_name = 'user_list.html'
 
+    def get_queryset(self):
+        """
+        Return the list of items for this view.
+        """
+        queryset = User.objects.all()
+        if not self.request.user.is_staff:
+            queryset = User.objects.filter(id=self.request.user.id)
+        return queryset
+
 
 class CreateUserView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
@@ -85,13 +94,22 @@ class ListApplicationsView(LoginRequiredMixin, ListView):
     queryset = Application.objects.exclude(status='Delete')
     template_name = 'application_list.html'
 
+    def get_queryset(self):
+        """
+        Return the list of items for this view.
+        """
+        queryset = Application.objects.exclude(status='Delete')
+        if not self.request.user.is_staff:
+            queryset = Application.objects.filter(app_admin=self.request.user.id)
+        return queryset
+
 
 class CreateApplicationView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     Create new application
     """
     model = Application
-    fields = ['name', 'max_limit', 'status']
+    fields = ['name', 'app_admin', 'max_limit', 'status']
     template_name = 'application_form.html'
     success_message = "%(name)s was created successfully"
     success_url = reverse_lazy('list_applications')
@@ -126,6 +144,14 @@ class SMSView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'sms_form.html'
     success_message = "SMS sent successfully"
     success_url = reverse_lazy('sms')
+
+    def get_context_data(self, **kwargs):
+        context = super(SMSView, self).get_context_data(**kwargs)
+        if self.request.user.is_staff:
+            context['form'].fields['application'].queryset = Application.objects.exclude(status='Delete')
+        else:
+            context['form'].fields['application'].queryset = Application.objects.filter(app_admin=self.request.user)
+        return context
 
     def post(self, request, *args, **kwargs):
         """
