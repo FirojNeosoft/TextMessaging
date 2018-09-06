@@ -16,4 +16,5 @@ urlpatterns = [
     path('application/<int:pk>/delete/', DeleteApplicationView.as_view(), name='delete_application'),
     
     path('', SMSView.as_view(), name='sms'),
+    path('logs/', LogsView.as_view(), name='sms_logs'),
 ]

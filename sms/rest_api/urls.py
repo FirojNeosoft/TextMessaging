@@ -12,4 +12,5 @@ router.register(r'applications', ApplicationViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('send/', SendMessage.as_view()),
+    path('logs/', MessageLogs.as_view()),
     ]

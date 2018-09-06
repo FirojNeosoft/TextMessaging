@@ -6,10 +6,21 @@ from rest_framework import serializers
 from sms.models import *
 
 
-class MobileMessageSerializer(serializers.Serializer):
+class TextMessageSerializer(serializers.Serializer):
     app_id = serializers.IntegerField(required=False, min_value=1)
     send_to = serializers.CharField(max_length=15)
     message = serializers.CharField(max_length=2048)
+
+
+class TextMessageHistorySerializer(serializers.ModelSerializer):
+    """
+    TextMessageHistory Serializer
+    """
+
+    class Meta:
+        model = TextMessageHistory
+        fields = '__all__'
+        read_only_fields = ('id', 'created_at')
 
 
 class UserSerializer(serializers.ModelSerializer):

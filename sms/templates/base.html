@@ -67,8 +67,9 @@
                           {% if request.user.is_staff %}System Users{% else %}User Profile{% endif %}
                      </a>
                    </li>
-                   <li><a href="{% url 'list_applications' %}"><i class="fa fa-home"></i> Applications </a></li>
-                   <li><a href="{% url 'sms' %}"><i class="fa fa-envelope"></i> Send SMS </a></li>
+                   <li><a href="{% url 'list_applications' %}"><i class="fa fa-adn"></i> Applications </a></li>
+                   <li><a href="{% url 'sms' %}"><i class="fa fa-envelope"> </i>Send SMS </a></li>
+                   <li><a href="{% url 'sms_logs' %}"><i class="fa fa-history"></i> Logs of SMS </a></li>
                 </ul>
               </div>
             </div>

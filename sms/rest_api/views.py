@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 from rest_framework.response import Response
 from rest_framework import generics, status, viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
+from sms.rest_api.permissions import IsAdminOrReadOnly
 from sms.rest_api.serializers import *
 from sms.utils import *
 
@@ -18,14 +20,18 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
     search_fields = ('username', 'email')
-    ordering_fields = ('username', 'email')
-    filter_fields = ('username', 'email', 'is_staff')
-    permission_classes = (IsAuthenticated,)
+    ordering_fields = ('id',)
+    filter_fields = ('is_staff',)
+    permission_classes = (IsAdminOrReadOnly,)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+
+        if not self.request.user.is_authenticated:
+            return Response({'status': 400, 'message': 'You don\'t have permission to access users.'}, \
+                            status=status.HTTP_400_BAD_REQUEST)
 
         if not self.request.user.is_staff:
             queryset = User.objects.filter(id=request.user.id)
@@ -38,6 +44,14 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != self.request.user and not self.request.user.is_staff:
+            return Response({'status': 400, 'message': 'You don\'t have permission to access this user.'}, \
+                            status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     """
@@ -45,14 +59,18 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     """
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    search_fields = ('name', 'status')
-    ordering_fields = ('name', 'created_at')
-    filter_fields = ('name',)
-    permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
+    search_fields = ('name',)
+    ordering_fields = ('created_at', 'max_limit')
+    filter_fields = ('status', 'app_admin')
+    permission_classes = (IsAdminOrReadOnly,)
 
     def list(self, request, *args, **kwargs):
         queryset = Application.objects.exclude(status='Delete')
+
+        if not self.request.user.is_authenticated:
+            return Response({'status': 400, 'message': 'You don\'t have permission to access applications.'}, \
+                            status=status.HTTP_400_BAD_REQUEST)
 
         if not self.request.user.is_staff:
             queryset = Application.objects.filter(app_admin=self.request.user.id)
@@ -65,17 +83,25 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.app_admin != self.request.user and not self.request.user.is_staff:
+            return Response({'status': 400, 'message': 'You don\'t have permission to access this application.'}, \
+                            status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class SendMessage(generics.CreateAPIView):
     """
     Send Message.
     """
-    serializer_class = MobileMessageSerializer
+    serializer_class = TextMessageSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
         try:
-            serializer = MobileMessageSerializer(data=request.data)
+            serializer = TextMessageSerializer(data=request.data)
             if serializer.is_valid():
                 if 'app_id' in serializer.data:
                     app = Application.objects.get(id=int(serializer.data['app_id']))
@@ -98,3 +124,25 @@ class SendMessage(generics.CreateAPIView):
         except Exception as e:
             logger.error("Error occured while sending sms "+str(e))
             return Response({'status': 400, 'message':str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MessageLogs(generics.ListAPIView):
+    """
+    SMS Logs.
+    """
+    queryset = TextMessageHistory.objects.all()
+    serializer_class = TextMessageHistorySerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
+    search_fields = ('text_message',)
+    ordering_fields = ('created_at',)
+    filter_fields = ('application', 'send_to')
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """
+        Return the list of items for this view.
+        """
+        queryset = TextMessageHistory.objects.all()
+        if not self.request.user.is_staff:
+            queryset = TextMessageHistory.objects.filter(application__app_admin=self.request.user)
+        return queryset

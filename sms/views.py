@@ -178,3 +178,20 @@ class SMSView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             messages.error(request, "Error occured while sending sms.")
         return redirect('sms')
 
+
+class LogsView(LoginRequiredMixin, ListView):
+    """
+    SMS logs
+    """
+    model = TextMessageHistory
+    queryset = TextMessageHistory.objects.all()
+    template_name = 'sms_history.html'
+
+    def get_queryset(self):
+        """
+        Return the list of items for this view.
+        """
+        queryset = TextMessageHistory.objects.all()
+        if not self.request.user.is_staff:
+            queryset = TextMessageHistory.objects.filter(application__app_admin=self.request.user)
+        return queryset
