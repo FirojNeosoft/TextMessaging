@@ -15,7 +15,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 class LoginView(View):
 
     def get(self, request):
-        return render(request, 'registration/login.html')
+        return render(request, 'login.html')
 
     def post(self, request):
         user = authenticate(request, username=request.POST['username'],
@@ -32,7 +32,7 @@ class LogoutView(LoginRequiredMixin, View):
 
     def get(self, request):
         logout(request)
-        return render(request, 'registration/login.html')
+        return render(request, 'login.html')
 
 
 class ChangePasswordView(LoginRequiredMixin, View):

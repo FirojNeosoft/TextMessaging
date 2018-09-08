@@ -25,8 +25,8 @@ schema_view = get_swagger_view(title='Messaging APIs')
 
 
 urlpatterns = [
-                path('login/', LoginView.as_view(), name="login"),
-                path('logout/', LogoutView.as_view(), name="logout"),
+                path('login/', LoginView.as_view(), name="sys_login"),
+                path('logout/', LogoutView.as_view(), name="sys_logout"),
                 path('change_password/', ChangePasswordView.as_view(), name="change_password"),
                 path('api-token-auth/', views.obtain_auth_token),
                 path('schema/', schema_view),
