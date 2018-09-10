@@ -123,6 +123,7 @@ USE_L10N = True
 USE_TZ = True
 
 LOGIN_URL = 'sys_login'
+LOGIN_REDIRECT_URL = 'sys_login'
 LOGOUT_URL = 'sys_logout'
 
 
